@@ -21,10 +21,8 @@ Eigen::Vector3d blinn_phong_shading(
   Eigen::Vector3d rgb = Eigen::Vector3d(0,0,0);
   Eigen::Vector3d ia = Eigen::Vector3d(0.1,0.1,0.1);
 
-  Eigen::Vector3d ka = objects[hit_id]->material->ka;
-  Eigen::Vector3d kd = objects[hit_id]->material->kd;
-  Eigen::Vector3d ks = objects[hit_id]->material->ks;
-  double phong_exp = objects[hit_id]->material->phong_exponent;
+  Eigen::Vector3d ka, kd, ks;
+  double phong_exp;
 
   rgb += (ka.array() * ia.array()).matrix();
   Ray light_ray;
@@ -35,7 +33,11 @@ Eigen::Vector3d blinn_phong_shading(
     bool hit = first_hit(light_ray, epslion, objects, light_hit_id, light_t, light_n);
     if (!hit || light_t > max_light_t)
     {
-      
+      ka = objects[hit_id]->material->ka;
+      kd = objects[hit_id]->material->kd;
+      ks = objects[hit_id]->material->ks;
+      phong_exp = objects[hit_id]->material->phong_exponent;
+
       Eigen::Vector3d I = lights[i]->I;
 
       Eigen::Vector3d h = (-ray.direction.normalized() + light_ray.direction.normalized()).normalized();
@@ -45,7 +47,8 @@ Eigen::Vector3d blinn_phong_shading(
     }
   }
 
-  
+  ka = objects[hit_id]->material->ka;
+  rgb += (ka.array() * ia.array()).matrix()
   return rgb;
 
   ////////////////////////////////////////////////////////////////////////////
