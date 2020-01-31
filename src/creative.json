@@ -57,7 +57,7 @@
     {
       "type": "sphere",
       "material": "orange plastic2",
-      "center": [3,3,3],
+      "center": [0.6,0.6,0.6],
       "radius": 0.3
     },
     {
