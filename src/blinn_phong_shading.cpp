@@ -24,7 +24,6 @@ Eigen::Vector3d blinn_phong_shading(
   Eigen::Vector3d ka, kd, ks;
   double phong_exp;
 
-  rgb += (ka.array() * ia.array()).matrix();
   Ray light_ray;
   light_ray.origin = ray.origin + t * ray.direction;
   for (int i = 0; i < lights.size(); ++i)
