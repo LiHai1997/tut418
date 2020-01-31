@@ -13,12 +13,13 @@ bool raycolor(
 {
   ////////////////////////////////////////////////////////////////////////////
   // Replace with your code here:
-  if (num_recursive_calls > 22)
+  if (num_recursive_calls > 5)
   {
     return false;
   }
   int hit_id;
-  double t, min_new_t = 1e-8;
+  double epslion = 1e-7;
+  double t;
   rgb = Eigen::Vector3d(0,0,0);
   Eigen::Vector3d n, new_color;
 
@@ -26,11 +27,12 @@ bool raycolor(
   if (result)
   {
     rgb += blinn_phong_shading(ray, hit_id, t, n, objects, lights);
-    Ray new_ray;
-    new_ray.direction = reflect(ray.direction, n);
-    if (raycolor(new_ray, min_new_t, objects, lights, num_recursive_calls + 1, new_color))
+    Ray out_ray;
+    out_ray.direction = reflect(ray.direction, n);
+    Eigen::Vector3d km = objects[hit_id]->material->km;
+    if (raycolor(out_ray, epslion, objects, lights, num_recursive_calls + 1, new_color))
     {
-      rgb += (objects[hit_id]->material->km.array() * new_color.array()).matrix();
+      rgb += (km.array() * new_color.array()).matrix();
     }
   }
   return result;
