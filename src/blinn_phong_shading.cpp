@@ -48,7 +48,7 @@ Eigen::Vector3d blinn_phong_shading(
   }
 
   ka = objects[hit_id]->material->ka;
-  rgb += (ka.array() * ia.array()).matrix()
+  rgb += (ka.array() * ia.array()).matrix();
   return rgb;
 
   ////////////////////////////////////////////////////////////////////////////
