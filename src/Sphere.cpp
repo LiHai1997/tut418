@@ -3,6 +3,33 @@
 #include <cmath>
 #include <iostream>
 
+bool quadratic_solution(
+        const double a,
+        const double b,
+        const double c,
+        double & x1,
+        double & x2)
+{
+    // if b^2 - 4ac...
+    //    = 0 -> t1 = t2 = -b/2a
+    //    > 0 -> t1 / t2 = (-b +/- sqrt(b^2 - 4ac)) / 2a - pick closer point
+    //    < 0 -> no solution
+    double determinant = pow(b, 2.0) - 4.0 * a * c;
+    // in c++ we can assume number 0 <= x < 1e-6 are just zero
+    if (0 <= determinant && determinant <= 1e-6){
+        x1 = (-b / (2.0 * a));
+        x2 = x1;
+        return true;
+    }
+    else if (determinant < 0)
+        return false;
+    else{
+        x1 = (-b + sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+        x2 = (-b - sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+        return true;
+    }
+}
+
 bool Sphere::intersect(
   const Ray & ray, const double min_t, double & t, Eigen::Vector3d & n) const
 {
