@@ -38,9 +38,6 @@ bool Sphere::intersect(
     n = (ray.origin + t*d - center) / radius;
     return true;
   }
-  else {
-    return false;
-  }
   else if (discriminant == 0.0) 
   {
     t = (-d).dot(o) / d.dot(d);
@@ -51,6 +48,10 @@ bool Sphere::intersect(
       }
     n = (ray.origin + t*d - center) / radius;
     return true;
+  }
+  else 
+  {
+    return false;
   }
   ////////////////////////////////////////////////////////////////////////////
 }
