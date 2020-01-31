@@ -78,20 +78,55 @@ bool Sphere::intersect(
 
   //   }
   // }
-  double t1, t2, radius = this->radius;
-    auto e = ray.origin, d = ray.direction, o = this->center;
-    auto a = d.dot(d);
-    auto b = 2.0 * (e.transpose().dot(d) - o.transpose().dot(d));
-    auto c = e.transpose().dot(e) - (2.0 * e.transpose().dot(o)) + o.transpose().dot(o) - pow(radius, 2.0);
-    auto ret = quadratic_solution(a, b, c, t1, t2);
-    if (ret && (t1 >= min_t || t2 >= min_t)){
-        t = (t1 < t2 && t >= min_t) ? t1 : t2;
-        auto intersection = e + t * d;
-        n = (intersection - o).normalized();
-        return true;
-    }
-    return false;
+  // double t1, t2, radius = this->radius;
+  //   auto e = ray.origin, d = ray.direction, o = this->center;
+  //   auto a = d.dot(d);
+  //   auto b = 2.0 * (e.transpose().dot(d) - o.transpose().dot(d));
+  //   auto c = e.transpose().dot(e) - (2.0 * e.transpose().dot(o)) + o.transpose().dot(o) - pow(radius, 2.0);
+  //   auto ret = quadratic_solution(a, b, c, t1, t2);
+  //   if (ret && (t1 >= min_t || t2 >= min_t)){
+  //       t = (t1 < t2 && t >= min_t) ? t1 : t2;
+  //       auto intersection = e + t * d;
+  //       n = (intersection - o).normalized();
+  //       return true;
+  //   }
+  //   return false;
+    Eigen::Vector3d d = ray.direction;
+  Eigen::Vector3d e_minus_c = ray.origin-center;
 
+  double A = d.dot(d);
+  double B = (d).dot(e_minus_c);
+  double C = (e_minus_c).dot(e_minus_c) - pow(radius, 2.0);
+
+  double discriminant = pow(B, 2.0) - A*C;
+
+  if (discriminant == 0.0) {
+    t = (-d).dot(e_minus_c) / d.dot(d);
+    // check if the ray is not intersecting with something else 
+    // in between ray origin and image plane (if min_t =1).
+    if (t <= min_t) return false;
+    // unit normal
+    n = (ray.origin + t*d - center) / radius;
+    return true;
+  }
+  else if (discriminant > 0.0) {
+    double t1 = ((-d).dot(e_minus_c) + sqrt(discriminant)) / d.dot(d);
+    double t2 = ((-d).dot(e_minus_c) - sqrt(discriminant)) / d.dot(d);
+    if (std::min(t1, t2) < min_t && std::max(t1, t2) >min_t) {
+      t = std::max(t1, t2);
+    }
+    else if (std::min(t1, t2) > min_t) {
+      t = std::min(t1, t2);
+    }
+    else {
+      return false;
+    }
+    n = (ray.origin + t*d - center) / radius;
+    return true;
+  }
+  else {
+    return false;
+  }
   ////////////////////////////////////////////////////////////////////////////
 }
 
