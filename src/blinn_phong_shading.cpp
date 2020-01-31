@@ -3,6 +3,11 @@
 #include "first_hit.h"
 #include <iostream>
 
+Eigen::Vector3d mat_mult(
+    const Eigen::Vector3d & a,
+    const Eigen::Vector3d & b){
+  return (a.array() * b.array()).matrix();
+}
 Eigen::Vector3d blinn_phong_shading(
   const Ray & ray,
   const int & hit_id, 
