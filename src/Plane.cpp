@@ -8,16 +8,16 @@ bool Plane::intersect(
   // Replace with your code here:
   
 
-  ray is parallel to plane 
+  // ray is parallel to plane 
   if (ray.direction.dot(normal) == 0)
   {
     return false;
   }
 
-  double tmp = (point - ray.origin).dot(normal)/(ray.direction.dot(normal));
-  if (tmp >= min_t)
+  double temp = (point - ray.origin).dot(normal)/(ray.direction.dot(normal));
+  if (temp >= min_t)
   {
-    t = tmp;
+    t = temp;
   	n = normal;
   	return true;
   }
